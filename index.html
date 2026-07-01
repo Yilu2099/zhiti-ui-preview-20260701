@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>智替 · 页面优化高保真预览</title>
+<style>
+:root {
+  --page: #e8edf4;
+  --shell: #f6f8fb;
+  --card: #fff;
+  --card2: #f2f5fa;
+  --line: #e3e8f1;
+  --line2: #d6deeb;
+  --ink: #0b1220;
+  --text: #2e384a;
+  --muted: #6d778b;
+  --faint: #9aa4b5;
+  --brand: #3557e6;
+  --brand2: #223fb4;
+  --brandSoft: #edf1ff;
+  --up: #e83d52;
+  --upSoft: #fff0f2;
+  --down: #14a06a;
+  --downSoft: #e8f7ef;
+  --gold: #9b6a07;
+  --goldSoft: #fff5dc;
+  --shadow: 0 18px 50px rgba(31, 60, 130, .14);
+  --shadow2: 0 1px 2px rgba(31, 60, 130, .04), 0 8px 22px rgba(31, 60, 130, .07);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  font-family: var(--font);
+  background: var(--page);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+button, input { font: inherit; }
+.workbench {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(300px, 390px) minmax(390px, 1fr);
+  gap: 28px;
+  padding: 28px;
+  align-items: start;
+}
+.brief {
+  position: sticky;
+  top: 28px;
+  padding: 22px;
+  border: 1px solid rgba(214, 222, 235, .9);
+  border-radius: 24px;
+  background: rgba(255,255,255,.78);
+  box-shadow: var(--shadow2);
+  backdrop-filter: blur(12px);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--ink);
+  font-weight: 800;
+}
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(145deg, #4263f0, #253da7);
+  box-shadow: 0 10px 22px rgba(53, 87, 230, .28);
+}
+h1 {
+  margin: 18px 0 8px;
+  color: var(--ink);
+  font-size: 25px;
+  line-height: 1.18;
+  letter-spacing: 0;
+}
+.lead {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.68;
+}
+.brief h2 {
+  margin: 20px 0 10px;
+  color: var(--ink);
+  font-size: 14px;
+}
+.checklist {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.checklist li {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: start;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text);
+}
+.checklist span {
+  width: 24px;
+  height: 24px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  color: var(--brand);
+  background: var(--brandSoft);
+  font-size: 12px;
+  font-weight: 800;
+}
+.scope {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.scope span {
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+.stage {
+  display: grid;
+  justify-items: center;
+}
+.screen-tabs {
+  width: min(100%, 760px);
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 3px 3px 14px;
+  scrollbar-width: none;
+}
+.screen-tabs::-webkit-scrollbar { display: none; }
+.screen-tabs button {
+  flex: none;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--line2);
+  border-radius: 999px;
+  background: rgba(255,255,255,.8);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.screen-tabs button.active {
+  color: #fff;
+  border-color: var(--brand);
+  background: linear-gradient(135deg, #4968f4, #2d49cc);
+  box-shadow: 0 9px 22px rgba(53, 87, 230, .24);
+}
+.phone {
+  width: 390px;
+  height: 844px;
+  overflow: hidden;
+  border: 1px solid var(--line2);
+  border-radius: 36px;
+  background: var(--shell);
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--shell);
+}
+.topbar {
+  min-height: 58px;
+  padding: 12px 16px 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(246,248,251,.88);
+  border-bottom: 1px solid rgba(227,232,241,.75);
+  backdrop-filter: blur(12px);
+  z-index: 3;
+}
+.topbar .title {
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 800;
+}
+.spacer { flex: 1; }
+.icon-btn {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.icon-btn svg { width: 18px; height: 18px; }
+.scroll {
+  flex: 1;
+  overflow: auto;
+  padding: 14px 14px 88px;
+  scrollbar-width: none;
+}
+.scroll::-webkit-scrollbar { display: none; }
+.card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: var(--shadow2);
+}
+.search-hero {
+  padding: 12px;
+  border-radius: 22px;
+  background:
+    linear-gradient(135deg, rgba(53,87,230,.12), rgba(20,160,106,.08)),
+    #fff;
+  border: 1px solid rgba(214,222,235,.95);
+}
+.search-field {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 11px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+}
+.search-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  color: var(--ink);
+  background: transparent;
+  font-size: 15px;
+}
+.hero-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: end;
+  padding: 18px 2px 6px;
+}
+.hero-kicker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--brand2);
+  font-size: 12px;
+  font-weight: 800;
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--down);
+  box-shadow: 0 0 0 5px rgba(20,160,106,.12);
+}
+.hero-main {
+  margin-top: 7px;
+  color: var(--ink);
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 850;
+}
+.hero-main small {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 800;
+}
+.home-actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+.btn {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 0 13px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.btn.primary {
+  color: #fff;
+  border-color: var(--brand);
+  background: linear-gradient(135deg, #4968f4, #2d49cc);
+}
+.btn.danger {
+  color: var(--up);
+  border-color: #f3c9d1;
+  background: #fff7f8;
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 18px 2px 9px;
+}
+.section-head h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 16px;
+}
+.section-head small,
+.linkish {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+.watch-list, .rank-list, .signal-list {
+  display: grid;
+  gap: 9px;
+}
+.stock-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  padding: 13px;
+  align-items: center;
+}
+.stock-name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 800;
+}
+.stock-name b {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tag {
+  flex: none;
+  padding: 3px 7px;
+  border-radius: 8px;
+  background: var(--card2);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+.tag.us { color: #3452d3; background: var(--brandSoft); }
+.tag.hk { color: #8a5c00; background: var(--goldSoft); }
+.meta {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+.right-num {
+  text-align: right;
+}
+.right-num b {
+  display: block;
+  font-size: 17px;
+  line-height: 1.1;
+}
+.right-num small {
+  display: block;
+  margin-top: 4px;
+  color: var(--faint);
+  font-size: 11px;
+  font-weight: 800;
+}
+.up { color: var(--up); }
+.down { color: var(--down); }
+.muted { color: var(--muted); }
+.seg {
+  margin: 0 0 10px;
+  padding: 5px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,.9);
+  box-shadow: var(--shadow2);
+}
+.seg button,
+.chips button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 850;
+}
+.seg button {
+  min-height: 40px;
+  border-radius: 999px;
+  color: var(--muted);
+}
+.seg button.active.buy {
+  color: #fff;
+  background: linear-gradient(135deg, #ff7582, #df344b);
+}
+.seg button.active.sell {
+  color: #fff;
+  background: linear-gradient(135deg, #42cc91, #159c66);
+}
+.chips {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.chips button {
+  min-height: 38px;
+  border-radius: 14px;
+  color: var(--muted);
+  background: #fff;
+  border: 1px solid var(--line);
+  font-size: 13px;
+}
+.chips button.active {
+  color: #fff;
+  border-color: var(--brand);
+  background: var(--brand);
+}
+.status-note {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(53,87,230,.16);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #f8faff, #eff3ff);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.status-note b { color: var(--brand2); }
+.signal-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 11px;
+  padding: 13px;
+  align-items: center;
+}
+.metrics {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.metric {
+  display: inline-flex;
+  gap: 4px;
+  align-items: baseline;
+  padding: 4px 7px;
+  border-radius: 9px;
+  background: var(--card2);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+.metric.hero {
+  color: var(--up);
+  background: var(--upSoft);
+}
+.signal-badge {
+  min-width: 108px;
+  padding: 8px 9px;
+  border-radius: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(232,61,82,.08), #fff);
+  border: 1px solid rgba(232,61,82,.11);
+}
+.pill {
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-weight: 850;
+}
+.pill.buy { color: var(--up); background: var(--upSoft); }
+.pill.sell { color: var(--down); background: var(--downSoft); }
+.signal-badge strong {
+  display: block;
+  font-size: 16px;
+  line-height: 1;
+}
+.signal-badge small {
+  color: var(--faint);
+  font-size: 10px;
+  font-weight: 800;
+}
+.toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 0 10px;
+}
+.sort {
+  display: inline-flex;
+  gap: 3px;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--card2);
+}
+.sort button {
+  min-height: 32px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 12px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+.sort button.active {
+  color: var(--ink);
+  background: #fff;
+  box-shadow: var(--shadow2);
+}
+.rank-row {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  gap: 10px;
+  padding: 12px;
+  align-items: center;
+}
+.rank-no {
+  width: 28px;
+  height: 28px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--card2);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+.rank-no.top {
+  color: #fff;
+  background: linear-gradient(135deg, #f0b65a, #cf7720);
+}
+.why {
+  margin-top: 7px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 7px;
+  border-radius: 9px;
+  color: var(--brand2);
+  background: var(--brandSoft);
+  font-size: 11px;
+  font-weight: 800;
+}
+.detail-head {
+  margin: -14px -14px 0;
+  padding: 15px 14px 14px;
+  background: linear-gradient(180deg, #fff, #f6f8fb);
+  border-bottom: 1px solid var(--line);
+}
+.detail-top {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+.code-line {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+.detail-name {
+  margin-top: 5px;
+  color: var(--ink);
+  font-size: 24px;
+  font-weight: 850;
+}
+.price {
+  text-align: right;
+  color: var(--ink);
+  font-size: 26px;
+  font-weight: 850;
+}
+.ai-card {
+  margin-top: 12px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 10px;
+  align-items: start;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+.ai-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, #4968f4, #2d49cc);
+}
+.ai-card b {
+  color: var(--ink);
+  font-size: 14px;
+}
+.ai-card p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.action-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+.kline {
+  margin-top: 12px;
+  padding: 12px;
+}
+.chart {
+  height: 224px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px) 0 28px / 100% 44px,
+    linear-gradient(90deg, rgba(227,232,241,.65) 1px, transparent 1px) 0 0 / 46px 100%,
+    linear-gradient(180deg, #fbfcff, #f6f8fb);
+  position: relative;
+  overflow: hidden;
+}
+.candle {
+  position: absolute;
+  bottom: 28px;
+  width: 7px;
+  border-radius: 2px;
+  background: var(--up);
+}
+.candle.downc { background: var(--down); }
+.candle:before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: -12px;
+  width: 1px;
+  height: calc(100% + 24px);
+  background: inherit;
+  opacity: .55;
+}
+.mark {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  border: 2px solid #fff;
+  font-size: 11px;
+  font-weight: 850;
+  box-shadow: var(--shadow2);
+}
+.mark.buy { background: var(--up); }
+.mark.sell { background: var(--down); }
+.kline-tools {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 7px;
+}
+.tool-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  padding: 5px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: var(--card2);
+}
+.tool-group.full {
+  grid-template-columns: 1fr;
+  background: var(--brandSoft);
+  border-color: #d2dcff;
+}
+.tool-group button {
+  min-height: 34px;
+  border: 0;
+  border-radius: 11px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+}
+.tool-group.full button {
+  color: var(--brand);
+}
+.ledger {
+  margin-top: 12px;
+  padding: 12px;
+}
+.ledger-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+}
+.ledger-cell {
+  min-height: 62px;
+  padding: 9px 6px;
+  border-radius: 14px;
+  background: var(--card2);
+  text-align: center;
+}
+.ledger-cell b {
+  display: block;
+  color: var(--ink);
+  font-size: 15px;
+}
+.ledger-cell small {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+.watch-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 9px;
+  align-items: center;
+  padding: 12px;
+}
+.drag {
+  width: 28px;
+  height: 38px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--card2);
+  color: var(--faint);
+  font-size: 18px;
+}
+.toast {
+  margin: 10px 0 0;
+  padding: 10px 11px;
+  border-radius: 14px;
+  background: #111827;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.settings-hero {
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 11px;
+  align-items: center;
+  background: linear-gradient(145deg, #f8fbff, #eef3ff);
+}
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 17px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: var(--brand);
+  font-weight: 850;
+}
+.menu {
+  display: grid;
+  gap: 9px;
+  margin-top: 14px;
+}
+.menu-row {
+  min-height: 58px;
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+.menu-ico {
+  width: 36px;
+  height: 36px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  color: var(--brand);
+  background: var(--brandSoft);
+}
+.switch {
+  width: 48px;
+  height: 28px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--brand);
+  padding: 3px;
+}
+.switch:after {
+  content: "";
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  margin-left: 20px;
+}
+.bottom-nav {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 74px;
+  padding: 7px 9px 9px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  border-top: 1px solid var(--line);
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(12px);
+}
+.bottom-nav button {
+  border: 0;
+  border-radius: 15px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  cursor: pointer;
+}
+.bottom-nav button span {
+  display: block;
+  width: 22px;
+  height: 22px;
+  margin: 0 auto 3px;
+}
+.bottom-nav button.active {
+  color: var(--brand);
+  background: var(--brandSoft);
+}
+.hidden { display: none !important; }
+svg { display: block; }
+@media (max-width: 900px) {
+  .workbench {
+    display: block;
+    padding: 16px;
+  }
+  .brief {
+    position: static;
+    margin-bottom: 16px;
+  }
+  .phone {
+    width: min(390px, 100%);
+    height: min(844px, calc(100dvh - 100px));
+    border-radius: 26px;
+  }
+}
+</style>
+</head>
+<body>
+<main class="workbench">
+  <aside class="brief">
+    <div class="brand"><div class="brand-mark">智</div><div>智替股票助手<br><span class="muted" style="font-size:12px">页面优化高保真预览</span></div></div>
+    <h1>把高频操作做清楚，不改变产品气质</h1>
+    <p class="lead">这版保留现有克制金融工具风格，重点调整按钮层级、筛选排版、列表信息密度和详情页关键动作。静态假数据，模拟真实用户会看到的密度。</p>
+    <div class="scope"><span>首页</span><span>买卖点</span><span>排行榜</span><span>详情</span><span>自选</span><span>设置</span></div>
+    <h2>这版主要改什么</h2>
+    <ul class="checklist">
+      <li><span>1</span><div>统一按钮体系：主操作、次操作、筛选、危险操作分层，不再每页一套视觉。</div></li>
+      <li><span>2</span><div>买卖点页压缩顶部控件，把说明降级为状态条，首屏优先看股票。</div></li>
+      <li><span>3</span><div>排行榜增加排序理由，让用户知道为什么这只排前面。</div></li>
+      <li><span>4</span><div>详情页把模拟买卖、K 线工具、交易台账做成更明确的工作流。</div></li>
+      <li><span>5</span><div>自选移除改成危险动作，并预留撤销提示，降低误触成本。</div></li>
+    </ul>
+  </aside>
+
+  <section class="stage">
+    <nav class="screen-tabs" aria-label="预览页面切换">
+      <button class="active" data-screen="home">首页</button>
+      <button data-screen="signals">买卖点</button>
+      <button data-screen="track">排行榜</button>
+      <button data-screen="detail">详情</button>
+      <button data-screen="watch">自选</button>
+      <button data-screen="settings">设置</button>
+    </nav>
+    <div class="phone">
+      <div class="app" id="app"></div>
+    </div>
+  </section>
+</main>
+<script>
+const icons = {
+  search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>',
+  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>',
+  star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"/></svg>',
+  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>',
+  signal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>',
+  rank: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 19V9"/><path d="M12 19V5"/><path d="M19 19v-7"/></svg>',
+  me: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.7-4 4.4-6 8-6s6.3 2 8 6"/></svg>',
+  spark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l1.8 6.1L20 10l-6.2 1.9L12 18l-1.8-6.1L4 10l6.2-1.9L12 2Z"/></svg>',
+  bell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 3H4l2-3Z"/><path d="M10 21h4"/></svg>'
+};
+const data = {
+  watch: [
+    ['新易盛', '300502', 'AI 光模块', '+268%', '+6.4%', 'SZ'],
+    ['工业富联', '601138', 'AI 服务器', '+184%', '+2.1%', 'SH'],
+    ['腾讯控股', '00700', '港股互联网', '+92%', '+1.8%', 'HK'],
+    ['NVIDIA', 'NVDA', 'AI 芯片', '+156%', '-0.7%', 'US']
+  ],
+  signals: [
+    ['胜宏科技', '300476', '+312%', '81%', '07-01买入', '+4.8%', 'PCB'],
+    ['寒武纪', '688256', '+226%', '74%', '06-28买入', '+9.3%', 'AI 芯片'],
+    ['洛阳钼业', '603993', '+118%', '68%', '06-26买入', '-1.6%', '铜钴资源'],
+    ['新易盛', '300502', '+268%', '77%', '06-20买入', '+23.4%', '光模块']
+  ],
+  rank: [
+    ['新易盛', '300502', '+268%', '77%', '19笔', '持有中 +23.4%', 'AI 光模块'],
+    ['胜宏科技', '300476', '+244%', '81%', '16笔', '持有中 +4.8%', 'PCB'],
+    ['寒武纪', '688256', '+226%', '74%', '11笔', '持有中 +9.3%', 'AI 芯片'],
+    ['工业富联', '601138', '+184%', '70%', '14笔', '当前空仓', 'AI 服务器']
+  ]
+};
+let state = { screen: 'home', side: 'buy', market: 'cn', sort: 'return' };
+const app = document.getElementById('app');
+function topbar(title, back) {
+  return '<header class="topbar">' + (back ? '<button class="icon-btn" data-screen="home">' + icons.back + '</button>' : '') + '<span class="title">' + title + '</span><span class="spacer"></span><button class="icon-btn">' + icons.search + '</button></header>';
+}
+function nav(active) {
+  return '<nav class="bottom-nav">' +
+    navBtn('home', '首页', icons.home, active) +
+    navBtn('signals', '买卖点', icons.signal, active) +
+    navBtn('track', '排行榜', icons.rank, active) +
+    navBtn('settings', '我的', icons.me, active) +
+  '</nav>';
+}
+function navBtn(key, label, icon, active) {
+  return '<button class="' + (active === key ? 'active' : '') + '" data-screen="' + key + '"><span>' + icon + '</span>' + label + '</button>';
+}
+function stockRow(s) {
+  const down = s[4][0] === '-';
+  return '<article class="card stock-row"><div><div class="stock-name"><b>' + s[0] + '</b><span class="tag ' + (s[5] === 'US' ? 'us' : s[5] === 'HK' ? 'hk' : '') + '">' + s[5] + '</span></div><div class="meta">' + s[1] + ' · ' + s[2] + '</div></div><div class="right-num"><b class="up">' + s[3] + '</b><small class="' + (down ? 'down' : 'up') + '">' + s[4] + ' 今日</small></div></article>';
+}
+function renderHome() {
+  app.innerHTML = '<div class="scroll"><section class="search-hero"><div class="search-field">' + icons.search + '<input value="" placeholder="搜代码 / 名字 / Tesla"></div><div class="hero-row"><div><div class="hero-kicker"><span class="dot"></span>AI 算法 · 实时盯盘</div><div class="hero-main">12<small> 只自选</small></div></div><div class="home-actions"><button class="btn primary" data-screen="watch">管理自选</button><button class="btn">上传</button></div></div></section><div class="section-head"><h2>自选股</h2><span class="linkish" data-screen="watch">排序管理 ›</span></div><div class="watch-list">' + data.watch.map(stockRow).join('') + '</div></div>' + nav('home');
+}
+function renderSignals() {
+  app.innerHTML = topbar('买卖点') + '<div class="scroll"><div class="seg"><button class="' + (state.side === 'buy' ? 'active buy' : '') + '" data-side="buy">买点</button><button class="' + (state.side === 'sell' ? 'active sell' : '') + '" data-side="sell">卖点</button></div>' + chips('market', [['cn','A股'],['hk','港股'],['us','美股'],['etf','ETF']], state.market) + '<div class="status-note"><b>当前 A股 已收盘确认</b><span>只展示往期累计盈利超过 50% 的有效信号，盘中临时信号会单独标黄。</span></div><div class="signal-list">' + data.signals.map(signalRow).join('') + '</div></div>' + nav('signals');
+}
+function signalRow(s) {
+  return '<article class="card signal-row"><div><div class="stock-name"><b>' + s[0] + '</b><span class="tag">' + s[6] + '</span></div><div class="metrics"><span class="metric hero">往期盈利 <b>' + s[2] + '</b></span><span class="metric">胜率 <b>' + s[3] + '</b></span></div></div><div class="signal-badge"><span class="pill ' + state.side + '">' + (state.side === 'buy' ? '买' : '卖') + '</span><div><strong class="' + (s[5][0] === '-' ? 'down' : 'up') + '">' + (state.side === 'buy' ? s[5] : '+18.6%') + '</strong><small>' + (state.side === 'buy' ? s[4] : '本次盈亏') + '</small></div></div></article>';
+}
+function chips(kind, items, active) {
+  return '<div class="chips">' + items.map(it => '<button class="' + (active === it[0] ? 'active' : '') + '" data-' + kind + '="' + it[0] + '">' + it[1] + '</button>').join('') + '</div>';
+}
+function renderTrack() {
+  app.innerHTML = topbar('排行榜') + '<div class="scroll"><div class="toolbar"><div class="linkish">A股 · 累计收益 ≥ 50%</div><div class="sort"><button class="' + (state.sort === 'return' ? 'active' : '') + '" data-sort="return">收益</button><button class="' + (state.sort === 'win' ? 'active' : '') + '" data-sort="win">胜率</button></div></div>' + chips('market', [['cn','A股'],['hk','港股'],['us','美股'],['etf','ETF']], state.market) + '<div class="rank-list">' + data.rank.map(rankRow).join('') + '</div><button class="btn" style="width:100%;margin-top:10px">加载更多 50 条</button></div>' + nav('track');
+}
+function rankRow(s, i) {
+  const why = state.sort === 'win' ? '胜率档内按收益排序' : '收益领先且近期有交易';
+  return '<article class="card rank-row"><span class="rank-no ' + (i < 3 ? 'top' : '') + '">' + (i + 1) + '</span><div><div class="stock-name"><b>' + s[0] + '</b><span class="tag">' + s[6] + '</span></div><div class="meta">' + s[4] + ' · 胜率 ' + s[3] + ' · ' + s[5] + '</div><span class="why">' + why + '</span></div><div class="right-num"><b class="up">' + s[2] + '</b><small>累计收益</small></div></article>';
+}
+function renderDetail() {
+  app.innerHTML = topbar('详情', true) + '<div class="scroll"><section class="detail-head"><div class="detail-top"><div><div class="code-line">300502 <span class="tag">SZ</span> AI 光模块</div><div class="detail-name">新易盛</div></div><div><div class="price">118.42</div><div class="up" style="text-align:right;font-weight:850">+6.4%</div></div></div><div class="ai-card"><div class="ai-icon">' + icons.spark + '</div><div><b>AI 研判：持有中，浮动盈亏 +23.4%</b><p>最近一次买点为 06-20。当前仍处于算法持仓区间，重点观察 5 日均线和量能变化。</p></div></div><div class="action-row"><button class="btn primary">模拟买入</button><button class="btn">模拟卖出</button></div></section><section class="card kline"><div class="section-head" style="margin:0 0 10px"><h2>K 线 · AI 买卖点</h2><small>日 K</small></div>' + chart() + '<div class="kline-tools"><div class="tool-group"><button>前段</button><button>后段</button></div><div class="tool-group"><button>放大</button><button>缩小</button></div><div class="tool-group full"><button>全屏看图</button></div></div></section><section class="card ledger"><div class="section-head" style="margin:0 0 10px"><h2>交易台账</h2><small>2025 至今</small></div><div class="ledger-grid"><div class="ledger-cell"><b class="up">+268%</b><small>累计收益</small></div><div class="ledger-cell"><b>19</b><small>交易笔数</small></div><div class="ledger-cell"><b>77%</b><small>胜率</small></div><div class="ledger-cell"><b class="up">+23%</b><small>当前持仓</small></div></div></section></div>' + nav('');
+}
+function chart() {
+  const bars = [42,54,38,70,62,88,76,104,92,118,96,132,126,150,138,168,156,188];
+  return '<div class="chart">' + bars.map((h,i) => '<span class="candle ' + (i % 4 === 1 ? 'downc' : '') + '" style="left:' + (18 + i * 18) + 'px;height:' + h + 'px"></span>').join('') + '<span class="mark buy" style="left:185px;bottom:76px">买</span><span class="mark sell" style="left:76px;bottom:128px">卖</span></div>';
+}
+function renderWatch() {
+  app.innerHTML = topbar('我的自选', true) + '<div class="scroll"><div class="search-field">' + icons.search + '<input placeholder="搜索自选股票 / 代码"></div><div class="section-head"><h2>共 12 只自选</h2><small>拖动左侧手柄排序</small></div><div class="watch-list">' + data.watch.map(watchRow).join('') + '</div><div class="toast">已开启撤销提示：移除后 5 秒内可以恢复，避免误删自选。</div></div>' + nav('');
+}
+function watchRow(s, i) {
+  return '<article class="card watch-row"><button class="drag">≡</button><div><div class="stock-name"><b>' + s[0] + '</b><span class="tag ' + (s[5] === 'US' ? 'us' : s[5] === 'HK' ? 'hk' : '') + '">' + s[5] + '</span></div><div class="meta">' + s[1] + ' · 持有中 ' + s[4] + '</div></div><button class="btn danger">' + (i === 1 ? '移除' : '更多') + '</button></article>';
+}
+function renderSettings() {
+  app.innerHTML = topbar('设置') + '<div class="scroll"><section class="card settings-hero"><div class="avatar">智</div><div><div class="stock-name"><b>管理员</b></div><div class="meta">130****7777 · 已登录</div></div><div class="right-num"><b>12</b><small>自选</small></div></section><div class="menu"><article class="card menu-row"><div class="menu-ico">' + icons.bell + '</div><div><div class="stock-name"><b>只推自选股</b></div><div class="meta">只提醒我的自选股票出现买卖点</div></div><button class="switch"></button></article><article class="card menu-row"><div class="menu-ico">' + icons.signal + '</div><div><div class="stock-name"><b>模拟炒股</b></div><div class="meta">100 万起始资金，多市场规则</div></div><span class="linkish">进入 ›</span></article><article class="card menu-row"><div class="menu-ico">' + icons.rank + '</div><div><div class="stock-name"><b>账号管理</b></div><div class="meta">成员、日志、系统诊断统一入口</div></div><span class="linkish">管理 ›</span></article></div><button class="btn danger" style="width:100%;margin-top:14px">退出登录</button></div>' + nav('settings');
+}
+const renderers = { home: renderHome, signals: renderSignals, track: renderTrack, detail: renderDetail, watch: renderWatch, settings: renderSettings };
+function render() {
+  renderers[state.screen]();
+  document.querySelectorAll('.screen-tabs button').forEach(btn => btn.classList.toggle('active', btn.dataset.screen === state.screen));
+}
+document.addEventListener('click', e => {
+  const screen = e.target.closest('[data-screen]');
+  if (screen) { state.screen = screen.dataset.screen; render(); return; }
+  const side = e.target.closest('[data-side]');
+  if (side) { state.side = side.dataset.side; render(); return; }
+  const market = e.target.closest('[data-market]');
+  if (market) { state.market = market.dataset.market; render(); return; }
+  const sort = e.target.closest('[data-sort]');
+  if (sort) { state.sort = sort.dataset.sort; render(); }
+});
+render();
+</script>
+</body>
+</html>
